@@ -30,6 +30,8 @@ function App() {
 
 export default App;
 
+// OLD CODE vvvvvvvvv
+
 // import React, { Component } from "react";
 // import { Route } from "react-router-dom";
 // import SavedList from "./Movies/SavedList";

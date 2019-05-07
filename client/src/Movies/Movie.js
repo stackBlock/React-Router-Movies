@@ -1,3 +1,51 @@
+import React, { useState, useEffect } from "react";
+import MovieCard from "./MovieCard";
+import axios from "axios";
+
+function Movie(props) {
+  const [movie, setMovie] = useState(null);
+
+  useEffect(() => {
+    const id = props.match.params.id;
+    fetchMovie(id);
+  });
+
+  function fetchMovie(id) {
+    axios
+      .get(`http://localhost:5000/api/movies/${id}`)
+      .then(response => setMovie(response.data))
+      .catch(error => {
+        console.error(error);
+      });
+  }
+
+  function saveMovie() {
+    console.log(props.addToSavedList);
+    const addToSavedList = props.addToSavedList;
+    addToSavedList(movie);
+  }
+
+  if (!movie) {
+    return <div>Loading movie information...</div>;
+  }
+
+  const { title, director, metascore, stars } = movie;
+
+  return (
+    <div className="save-wrapper">
+      <MovieCard movie={movie} />
+
+      <div className="save-button">
+        <button onClick={saveMovie}>Save</button>
+      </div>
+    </div>
+  );
+}
+
+export default Movie;
+
+// OLD CODE vvvvvvvvv
+
 // import React, { Component } from "react";
 // import MovieCard from "./MovieCard";
 // import axios from "axios";
@@ -55,49 +103,3 @@
 //     );
 //   }
 // }
-
-import React, { useState, useEffect } from "react";
-import MovieCard from "./MovieCard";
-import axios from "axios";
-
-function Movie(props) {
-  const [movie, setMovie] = useState(null);
-
-  useEffect(() => {
-    const id = props.match.params.id;
-    fetchMovie(id);
-  });
-
-  function fetchMovie(id) {
-    axios
-      .get(`http://localhost:5000/api/movies/${id}`)
-      .then(response => setMovie(response.data))
-      .catch(error => {
-        console.error(error);
-      });
-  }
-
-  function saveMovie() {
-    console.log(props.addToSavedList);
-    const addToSavedList = props.addToSavedList;
-    addToSavedList(movie);
-  }
-
-  if (!movie) {
-    return <div>Loading movie information...</div>;
-  }
-
-  const { title, director, metascore, stars } = movie;
-
-  return (
-    <div className="save-wrapper">
-      <MovieCard movie={movie} />
-
-      <div className="save-button">
-        <button onClick={saveMovie}>Save</button>
-      </div>
-    </div>
-  );
-}
-
-export default Movie;

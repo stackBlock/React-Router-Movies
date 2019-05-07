@@ -28,6 +28,8 @@ function MovieList() {
 
 export default MovieList;
 
+// OLD CODE vvvvvvvvvvvvvvv
+
 // import React, { Component } from "react";
 // import { Link } from "react-router-dom";
 // import MovieCard from "./MovieCard";
