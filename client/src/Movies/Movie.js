@@ -1,68 +1,105 @@
-import React, { Component } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import MovieCard from "./MovieCard";
+import axios from "axios";
 
-export default class Movie extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      movie: null
-    };
-  }
+function Movie(props) {
+  const [movie, setMovie] = useState(null);
 
-  componentDidMount() {
-    // change this line to grab the id passed on the URL
-    const id = 1;
-    this.fetchMovie(id);
-  }
+  useEffect(() => {
+    const id = props.match.params.id;
+    fetchMovie(id);
+  });
 
-  fetchMovie = id => {
+  function fetchMovie(id) {
     axios
       .get(`http://localhost:5000/api/movies/${id}`)
-      .then(response => {
-        this.setState(() => ({ movie: response.data }));
-      })
+      .then(response => setMovie(response.data))
       .catch(error => {
         console.error(error);
       });
-  };
-  // Uncomment this code when you're ready for the stretch problems
-  // componentWillReceiveProps(newProps){
-  //   if(this.props.match.params.id !== newProps.match.params.id){
-  //     this.fetchMovie(newProps.match.params.id);
-  //   }
-  // }
-
-  // saveMovie = () => {
-  //   const addToSavedList = this.props.addToSavedList;
-  //   addToSavedList(this.state.movie)
-  // }
-
-  render() {
-    if (!this.state.movie) {
-      return <div>Loading movie information...</div>;
-    }
-
-    const { title, director, metascore, stars } = this.state.movie;
-    return (
-      <div className="save-wrapper">
-        <div className="movie-card">
-          <h2>{title}</h2>
-          <div className="movie-director">
-            Director: <em>{director}</em>
-          </div>
-          <div className="movie-metascore">
-            Metascore: <strong>{metascore}</strong>
-          </div>
-          <h3>Actors</h3>
-
-          {stars.map(star => (
-            <div key={star} className="movie-star">
-              {star}
-            </div>
-          ))}
-        </div>
-        <div className="save-button">Save</div>
-      </div>
-    );
   }
+
+  function saveMovie() {
+    console.log(props.addToSavedList);
+    const addToSavedList = props.addToSavedList;
+    addToSavedList(movie);
+  }
+
+  if (!movie) {
+    return <div>Loading movie information...</div>;
+  }
+
+  const { title, director, metascore, stars } = movie;
+
+  return (
+    <div className="save-wrapper">
+      <MovieCard movie={movie} />
+
+      <div className="save-button">
+        <button onClick={saveMovie}>Save</button>
+      </div>
+    </div>
+  );
 }
+
+export default Movie;
+
+// OLD CODE vvvvvvvvv
+
+// import React, { Component } from "react";
+// import MovieCard from "./MovieCard";
+// import axios from "axios";
+
+// export default class Movie extends Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       movie: null
+//     };
+//   }
+
+//   componentDidMount() {
+//     const id = this.props.match.params.id;
+//     this.fetchMovie(id);
+//   }
+
+//   fetchMovie = id => {
+//     axios
+//       .get(`http://localhost:5000/api/movies/${id}`)
+//       .then(response => {
+//         this.setState(() => ({ movie: response.data }));
+//       })
+//       .catch(error => {
+//         console.error(error);
+//       });
+//   };
+//   // Uncomment this code when you're ready for the stretch problems
+//   componentWillReceiveProps(newProps) {
+//     if (this.props.match.params.id !== newProps.match.params.id) {
+//       this.fetchMovie(newProps.match.params.id);
+//     }
+//   }
+
+//   saveMovie = () => {
+//     console.log(this.props.addToSavedList);
+//     const addToSavedList = this.props.addToSavedList;
+//     addToSavedList(this.state.movie);
+//   };
+
+//   render() {
+//     if (!this.state.movie) {
+//       return <div>Loading movie information...</div>;
+//     }
+
+//     const { title, director, metascore, stars } = this.state.movie;
+//     return (
+//       <div className="save-wrapper">
+//         <MovieCard movie={this.state.movie} />
+
+//         <div className="save-button">
+//           <button onClick={this.saveMovie}>Save</button>
+//         </div>
+//       </div>
+//     );
+//   }
+// }
